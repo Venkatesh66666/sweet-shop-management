@@ -11,3 +11,7 @@ db.serialize(() => {
     )
   `);
 });
+
+export const clearUsersTable = () => {
+  db.run("DELETE FROM users");
+};
