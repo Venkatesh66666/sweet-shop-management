@@ -3,11 +3,8 @@ import sqlite3 from "sqlite3";
 export const db = new sqlite3.Database("database.sqlite");
 
 db.serialize(() => {
-  db.run(`DROP TABLE IF EXISTS users`);
-  db.run(`DROP TABLE IF EXISTS sweets`);
-
   db.run(`
-    CREATE TABLE users (
+    CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE,
       password TEXT,
@@ -16,7 +13,7 @@ db.serialize(() => {
   `);
 
   db.run(`
-    CREATE TABLE sweets (
+    CREATE TABLE IF NOT EXISTS sweets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
       category TEXT,
@@ -26,6 +23,21 @@ db.serialize(() => {
   `);
 });
 
-export const clearUsersTable = () => {
-  db.run("DELETE FROM users");
+// ✅ PROMISE-BASED HELPERS (CRITICAL)
+export const clearUsersTable = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    db.run("DELETE FROM users", (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+};
+
+export const clearSweetsTable = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    db.run("DELETE FROM sweets", (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
 };
