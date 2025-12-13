@@ -3,8 +3,8 @@ import sqlite3 from "sqlite3";
 export const db = new sqlite3.Database("database.sqlite");
 
 db.serialize(() => {
-  // Drop old table (safe for dev/testing)
   db.run(`DROP TABLE IF EXISTS users`);
+  db.run(`DROP TABLE IF EXISTS sweets`);
 
   db.run(`
     CREATE TABLE users (
@@ -12,6 +12,16 @@ db.serialize(() => {
       email TEXT UNIQUE,
       password TEXT,
       role TEXT NOT NULL
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE sweets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      category TEXT,
+      price REAL,
+      quantity INTEGER
     )
   `);
 });
