@@ -157,6 +157,8 @@ Role management panel
 Deployment (Netlify + Render)
 Automated testing
 
+Login page:
+<img width="851" height="777" alt="sweet-shop" src="https://github.com/user-attachments/assets/7d5771da-460f-4ebf-a9bd-4941f2dd4889" />
 
 
 👨‍💻 Author
