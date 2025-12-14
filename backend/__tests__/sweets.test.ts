@@ -24,14 +24,14 @@ describe("Sweets API", () => {
       );
     });
 
-    db.close(); // ✅ IMPORTANT
+    db.close(); 
 
     const loginRes = await request(app).post("/api/auth/login").send({
       email: "admin@mail.com",
       password: "admin123",
     });
 
-    expect(loginRes.body.token).toBeDefined(); // ✅ SAFETY
+    expect(loginRes.body.token).toBeDefined(); 
 
     const token = loginRes.body.token;
 
