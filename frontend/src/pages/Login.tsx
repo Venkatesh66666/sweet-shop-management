@@ -50,7 +50,7 @@ export default function Login() {
 
         <button onClick={handleLogin}>Login</button>
 
-        {/* ✅ REGISTER OPTION */}
+        {/* REGISTER OPTION */}
         <p style={{ textAlign: "center", marginTop: 16 }}>
           New user?{" "}
           <Link
