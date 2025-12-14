@@ -3,7 +3,6 @@ import app from "../src/app";
 import { clearUsersTable } from "../src/config/database";
 
 describe("Auth API", () => {
-
   beforeEach(async () => {
     await clearUsersTable(); // ✅ MUST AWAIT
   });

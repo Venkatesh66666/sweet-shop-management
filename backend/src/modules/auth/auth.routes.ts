@@ -1,21 +1,17 @@
 import { Router } from "express";
 import { register, login } from "./auth.controller";
-import { authMiddleware } from "../../middlewares/auth.middleware";
-import { requireAdmin } from "../../middlewares/role.middleware";
 
 const router = Router();
 
+/*
+ Auth Routes
+*/
 router.post("/register", register);
 router.post("/login", login);
+import { authenticate } from "../../middlewares/auth.middleware";
 
-// JWT protected route
-router.get("/protected", authMiddleware, (req, res) => {
-  return res.status(401).json({ message: "Unauthorized" });
-});
-
-// Admin-only route
-router.get("/admin", authMiddleware, requireAdmin, (req, res) => {
-  return res.status(403).json({ message: "Access denied" });
+router.get("/protected", authenticate, (_req, res) => {
+  res.status(200).json({ message: "Access granted" });
 });
 
 export default router;

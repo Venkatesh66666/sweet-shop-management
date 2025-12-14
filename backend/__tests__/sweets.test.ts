@@ -4,12 +4,10 @@ import { clearUsersTable, clearSweetsTable } from "../src/config/database";
 import sqlite3 from "sqlite3";
 
 describe("Sweets API", () => {
-
   beforeEach(async () => {
-  await clearUsersTable();
-  await clearSweetsTable();
-});
-
+    await clearUsersTable();
+    await clearSweetsTable();
+  });
 
   it("should allow admin to add a sweet", async () => {
     await request(app).post("/api/auth/register").send({
@@ -156,5 +154,4 @@ describe("Sweets API", () => {
 
     expect(response.status).toBe(200);
   });
-
 });

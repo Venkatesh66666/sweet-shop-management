@@ -1,15 +1,45 @@
 import { Router } from "express";
-import { addSweet, getAllSweets, updateSweet } from "./sweets.controller";
-import { authMiddleware } from "../../middlewares/auth.middleware";
-import { requireAdmin } from "../../middlewares/role.middleware";
+import {
+  createSweet,
+  getAllSweets,
+  searchSweets,
+  updateSweet,
+  deleteSweet,
+} from "./sweets.controller";
+import { authenticate } from "../../middlewares/auth.middleware";
+import { authorize } from "../../middlewares/role.middleware";
 
 const router = Router();
 
-// Public
+/*
+ POST /api/sweets
+ Admin only
+*/
+router.post("/", authenticate, authorize("ADMIN"), createSweet);
+
+/*
+ GET /api/sweets
+ Protected
+*/
 router.get("/", getAllSweets);
 
-// Admin only
-router.post("/", authMiddleware, requireAdmin, addSweet);
-router.put("/:id", authMiddleware, requireAdmin, updateSweet);
+
+/*
+ GET /api/sweets/search
+ Protected
+*/
+router.get("/search", authenticate, searchSweets);
+
+/*
+ PUT /api/sweets/:id
+ Admin only
+*/
+router.put("/:id", authenticate, authorize("ADMIN"), updateSweet);
+
+/*
+ DELETE /api/sweets/:id
+ Admin only
+*/
+router.delete("/:id", authenticate, authorize("ADMIN"), deleteSweet);
 
 export default router;

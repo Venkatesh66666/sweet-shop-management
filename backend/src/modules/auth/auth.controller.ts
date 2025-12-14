@@ -1,58 +1,59 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { db } from "../../config/database";
+import { registerUser, loginUser } from "./auth.service";
 
-const JWT_SECRET = "secret";
-
+/*
+ POST /api/auth/register
+*/
 export const register = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  db.run(
-    "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
-    [email, hashedPassword, "USER"],
-    (err: Error | null) => {
-      if (err) {
-        return res.status(400).json({ message: "User already exists" });
-      }
-
-      return res.status(201).json({
-        message: "User registered successfully",
-        email,
-      });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
-  );
+
+    await registerUser(email, password);
+
+    return res
+      .status(201)
+      .json({ message: "User registered successfully" });
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      error.message.includes("UNIQUE")
+    ) {
+      return res
+        .status(409)
+        .json({ message: "User already exists" });
+    }
+
+    return res
+      .status(500)
+      .json({ message: "Registration failed" });
+  }
 };
 
-export const login = (req: Request, res: Response) => {
-  const { email, password } = req.body;
+/*
+ POST /api/auth/login
+*/
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
 
-  db.get(
-    "SELECT * FROM users WHERE email = ?",
-    [email],
-    async (err: Error | null, user: any) => {
-      if (err || !user) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-          role: user.role, // ✅ REQUIRED
-        },
-        JWT_SECRET,
-        { expiresIn: "1h" }
-      );
-
-      return res.status(200).json({ token });
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
-  );
+
+    const token = await loginUser(email, password);
+
+    return res.status(200).json({ token });
+  } catch {
+    return res
+      .status(401)
+      .json({ message: "Invalid credentials" });
+  }
 };

@@ -1,73 +1,92 @@
 import { Request, Response } from "express";
-import { db } from "../../config/database";
+import {
+  createSweetService,
+  getAllSweetsService,
+  searchSweetsService,
+  updateSweetService,
+  deleteSweetService,
+} from "./sweets.service";
 
-export const addSweet = (req: Request, res: Response) => {
-  const { name, category, price, quantity } = req.body;
+/*
+ POST /api/sweets
+ Admin only
+*/
+export const createSweet = async (req: Request, res: Response) => {
+  try {
+    const { name, category, price, quantity } = req.body;
 
-  db.run(
-    "INSERT INTO sweets (name, category, price, quantity) VALUES (?, ?, ?, ?)",
-    [name, category, price, quantity],
-    function (err: Error | null) {
-      if (err) {
-        return res.status(400).json({ message: "Failed to add sweet" });
-      }
+    await createSweetService({ name, category, price, quantity });
 
-      return res.status(201).json({
-        id: this.lastID,
-        name,
-        category,
-        price,
-        quantity,
-      });
-    }
-  );
+    res.status(201).json({
+      name,
+      category,
+      price,
+      quantity,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-export const getAllSweets = (_req: Request, res: Response) => {
-  db.all("SELECT * FROM sweets", [], (err: Error | null, rows: any[]) => {
-    if (err) {
-      return res.status(500).json({ message: "Failed to fetch sweets" });
-    }
 
-    return res.status(200).json(rows);
-  });
+/*
+ GET /api/sweets
+ Protected
+*/
+export const getAllSweets = async (_req: Request, res: Response) => {
+  try {
+    const sweets = await getAllSweetsService();
+    res.status(200).json(sweets);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-export const updateSweet = (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { name, category, price, quantity } = req.body;
+/*
+ GET /api/sweets/search
+ Protected
+*/
+export const searchSweets = async (req: Request, res: Response) => {
+  try {
+    const { name, category, minPrice, maxPrice } = req.query;
 
-  db.run(
-    `
-    UPDATE sweets 
-    SET 
-      name = COALESCE(?, name),
-      category = COALESCE(?, category),
-      price = COALESCE(?, price),
-      quantity = COALESCE(?, quantity)
-    WHERE id = ?
-    `,
-    [name, category, price, quantity, id],
-    function (err: Error | null) {
-      if (err) {
-        return res.status(400).json({ message: "Failed to update sweet" });
-      }
+    const sweets = await searchSweetsService(
+      name as string,
+      category as string,
+      minPrice ? Number(minPrice) : undefined,
+      maxPrice ? Number(maxPrice) : undefined
+    );
 
-      if (this.changes === 0) {
-        return res.status(404).json({ message: "Sweet not found" });
-      }
+    res.status(200).json(sweets);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-      db.get(
-        "SELECT * FROM sweets WHERE id = ?",
-        [id],
-        (err2: Error | null, row: any) => {
-          if (err2 || !row) {
-            return res.status(500).json({ message: "Failed to fetch updated sweet" });
-          }
+/*
+ PUT /api/sweets/:id
+ Admin only
+*/
+export const updateSweet = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    await updateSweetService(id, req.body);
+    res.status(200).json({ message: "Sweet updated successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-          return res.status(200).json(row);
-        }
-      );
-    }
-  );
+/*
+ DELETE /api/sweets/:id
+ Admin only
+*/
+export const deleteSweet = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    await deleteSweetService(id);
+    res.status(200).json({ message: "Sweet deleted successfully" });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
 };
