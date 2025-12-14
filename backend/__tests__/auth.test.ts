@@ -4,7 +4,7 @@ import { clearUsersTable } from "../src/config/database";
 
 describe("Auth API", () => {
   beforeEach(async () => {
-    await clearUsersTable(); // ✅ MUST AWAIT
+    await clearUsersTable(); 
   });
 
   it("should register a new user", async () => {
