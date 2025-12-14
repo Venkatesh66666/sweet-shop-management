@@ -1,7 +1,13 @@
 # 🍬 Sweet Shop Management System
 
-A full-stack **Sweet Shop Management System** built using **React + TypeScript** (Frontend) and **Node.js + Express + TypeScript + SQLite** (Backend).  
-The application supports **role-based authentication**, **admin-controlled inventory management**, and **user purchases**.
+A full-stack **Sweet Shop Management System** designed to manage sweet inventory, user purchases, and administrative operations in a secure and scalable way.  
+The application is built using **React + TypeScript** for the frontend and **Node.js + Express + TypeScript + SQLite** for the backend.
+
+This system demonstrates **role-based authentication**, **protected APIs**, and **clean modular architecture**, following best practices such as **Test Driven Development (TDD)** and **separation of concerns**.  
+
+It allows regular users to browse and purchase sweets while providing administrators full control over inventory management, including adding, updating, and deleting sweets. The application ensures secure access using **JWT-based authentication** and maintains data consistency through backend validations.
+
+The project is suitable for **real-world use cases**, **technical interviews**, and **full-stack project submissions**, showcasing end-to-end development skills from UI to database.
 
 ---
 
@@ -81,18 +87,18 @@ sweet-shop-management/
 │
 └── README.md
 
-
-
 ---
+
+
 
 ## ⚙️ Setup Instructions
 
 ### 1️⃣ Backend Setup
 
-```bash
-cd backend
-npm install
-npm run dev
+
+- cd backend
+- npm install
+- npm run dev
 
 
 Backend runs at:
@@ -102,10 +108,10 @@ Health check:
 GET /health
 
 
-2️⃣ Frontend Setup
-cd frontend
-npm install
-npm run dev
+### 2️⃣ Frontend Setup
+- cd frontend
+- npm install
+- npm run dev
 
 
 Frontend runs at:
@@ -113,53 +119,55 @@ http://localhost:5173
 
 
 
-🔑 User Roles
-Role	Permissions
-USER	View & buy sweets
-ADMIN	Add, edit, delete sweets
+### 🔑 User Roles
+| Role  | Permissions              |
+| ----- | ------------------------ |
+| USER  | View & buy sweets        |
+| ADMIN | Add, edit, delete sweets |
+
 
 Role is derived from JWT payload.
 
 
 
-🔐 Authentication Flow
+### 🔐 Authentication Flow
 
-User registers
-Logs in
-JWT stored in localStorage
-Role extracted from token
-UI adapts based on role
-
-
-
-📸 Application Flow
-
-Login / Register
-Dashboard (User / Admin)
-Add / Edit / Delete sweets (Admin)
-Search sweets
-Purchase sweets
+1. User registers
+2. Logs in
+3. JWT stored in localStorage
+4. Role extracted from token
+5. UI adapts based on role
 
 
 
-🧪 Testing
+### 📸 Application Flow
 
-Backend APIs tested using Postman / Supertest
-Frontend tested manually in browser
+- Login / Register
+- Dashboard (User / Admin)
+- Add / Edit / Delete sweets (Admin)
+- Search sweets
+- Purchase sweets
 
 
 
-📌 Future Enhancements
+### 🧪 Testing
 
-Toast notifications
-Order history
-Role management panel
-Deployment (Netlify + Render)
-Automated testing
+- Backend APIs tested using Postman / Supertest
+- Frontend tested manually in browser
 
-Login page:
+
+
+### 📌 Future Enhancements
+
+- Toast notifications
+- Order history
+- Role management panel
+- Deployment (Netlify + Render)
+- Automated testing
+
+### Login Page:
 <img width="851" height="777" alt="sweet-shop" src="https://github.com/user-attachments/assets/7d5771da-460f-4ebf-a9bd-4941f2dd4889" />
 
 
-👨‍💻 Author
+### 👨‍💻 Author
 Venkatesh Choppadhandi
